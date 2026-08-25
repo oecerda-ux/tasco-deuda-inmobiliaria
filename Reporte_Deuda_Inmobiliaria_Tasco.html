@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasco Inmobiliaria · Informe Ejecutivo de Deuda Inmobiliaria</title>
+<style>
+  :root{
+    --navy:#0e2447; --gray:#8d929d; --white:#ffffff; --teal-dark:#2b424a; --teal:#465768;
+    --terracota:#ad4736; --tan:#aa806d; --sand:#d8cdc5; --amber:#c99a3d; --green:#1c6e42; --blue:#3a6ea5;
+    --radius:12px; --shadow:0 2px 10px rgba(14,36,71,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Segoe UI',Arial,Helvetica,sans-serif;color:var(--navy);
+    background:linear-gradient(180deg,#eef1f0 0%,#e4ddd6 100%);}
+  .wrap{max-width:1360px;margin:0 auto;padding:24px;}
+  header.top{background:var(--navy);border-radius:var(--radius);padding:24px 30px;box-shadow:var(--shadow);
+    margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+  header.top .title-block h1{margin:0;color:#fff;font-size:21px;font-weight:700;letter-spacing:.2px;}
+  header.top .title-block p{margin:6px 0 0;color:var(--sand);font-size:12.5px;opacity:.9;max-width:700px;line-height:1.5;}
+  header.top .meta{color:var(--sand);font-size:12px;text-align:right;opacity:.85;}
+  nav.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;background:#fff;padding:10px;border-radius:var(--radius);box-shadow:var(--shadow);position:sticky;top:10px;z-index:10;}
+  nav.tabs a{border:none;background:transparent;color:var(--navy);padding:9px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;transition:.15s;}
+  nav.tabs a:hover{background:var(--sand);}
+  .card{background:#fff;border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);margin-bottom:22px;}
+  h2.section-title{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--teal-dark);margin:0 0 16px;font-weight:800;border-bottom:2px solid var(--sand);padding-bottom:10px;}
+  h3{font-size:13.5px;color:var(--navy);margin:20px 0 10px;text-transform:uppercase;letter-spacing:.4px;}
+  p{line-height:1.6;font-size:13.5px;color:var(--teal-dark);}
+  .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:8px;}
+  .kpi-card{border-radius:var(--radius);padding:16px 16px 14px;box-shadow:var(--shadow);color:#fff;min-height:98px;}
+  .kpi-card .kpi-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;opacity:.9;}
+  .kpi-card .kpi-value{font-size:21px;font-weight:800;margin:8px 0 4px;}
+  .kpi-card .kpi-sub{font-size:10.2px;opacity:.85;line-height:1.3;}
+  .kpi-0{background:var(--navy);} .kpi-1{background:var(--green);} .kpi-2{background:var(--terracota);}
+  .kpi-3{background:var(--amber);} .kpi-4{background:linear-gradient(135deg,var(--navy),var(--teal));}
+  table{width:100%;border-collapse:collapse;font-size:11.8px;}
+  thead th{text-align:left;padding:8px 8px;background:var(--sand);color:var(--navy);font-size:10.2px;text-transform:uppercase;letter-spacing:.2px;font-weight:800;}
+  tbody td{padding:7px 8px;border-bottom:1px solid #eee;color:var(--teal-dark);vertical-align:top;}
+  tbody tr:hover{background:#f7f5f2;}
+  tr.total-row td{background:var(--sand);border-top:2px solid var(--navy);border-bottom:none;color:var(--navy);}
+  tr.total-row:hover td{background:var(--sand);}
+  td.num, th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .muted{color:var(--gray);font-size:10.5px;}
+  .pos{color:var(--green);font-weight:700;}
+  .neg{color:var(--terracota);font-weight:700;}
+  .warn{color:var(--amber);font-weight:700;}
+  .badge{display:inline-block;color:#fff;font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;letter-spacing:.3px;white-space:nowrap;}
+  .alert{border-radius:10px;padding:14px 16px;margin-bottom:12px;border-left:5px solid;}
+  .alert.rojo{background:#fbebe8;border-color:var(--terracota);}
+  .alert.amarillo{background:#fbf3e4;border-color:var(--amber);}
+  .alert.verde{background:#eaf3ee;border-color:var(--green);}
+  .alert.info{background:#eaf0f7;border-color:var(--blue);}
+  .alert h4{margin:0 0 6px;font-size:13px;color:var(--navy);}
+  .alert p{margin:0;font-size:12.8px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  .note{background:#f7f5f2;border-radius:8px;padding:12px 14px;font-size:11.8px;color:var(--teal);margin-top:10px;}
+  .src{display:inline-block;background:var(--navy);color:#fff;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;letter-spacing:.3px;}
+  ul.action-list{margin:8px 0 0;padding-left:18px;}
+  ul.action-list li{font-size:12.8px;line-height:1.6;margin-bottom:6px;color:var(--teal-dark);}
+  footer{text-align:center;color:var(--gray);font-size:11px;padding:18px 0 6px;}
+  .bar-row{display:grid;grid-template-columns:250px 1fr 230px;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid #f0ede9;}
+  .bar-row:last-child{border-bottom:none;}
+  .bar-label{font-size:12.5px;font-weight:700;color:var(--navy);}
+  .bar-track{height:26px;background:#f0ede8;border-radius:6px;overflow:hidden;display:flex;position:relative;}
+  .seg{height:100%;} .seg-amort{background:var(--green);} .seg-deuda{background:var(--terracota);} .seg-porgirar{background:var(--tan);}
+  .bar-empty{font-size:11px;color:var(--gray);padding:0 10px;line-height:26px;}
+  .bar-legend-vals{display:flex;flex-direction:column;gap:2px;font-size:10.5px;}
+  .lv-amort{color:var(--green);font-weight:700;} .lv-deuda{color:var(--terracota);font-weight:700;} .lv-porgirar{color:var(--tan);font-weight:700;}
+  .bar-legend{display:flex;gap:18px;margin-bottom:14px;font-size:11.5px;color:var(--teal-dark);flex-wrap:wrap;}
+  .bar-swatch{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:middle;}
+  .donut-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .donut{width:200px;height:200px;border-radius:50%;position:relative;flex-shrink:0;}
+  .donut::after{content:'';position:absolute;inset:32px;background:#fff;border-radius:50%;box-shadow:inset 0 0 0 1px #eee;}
+  .donut-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
+  .donut-center b{font-size:16px;color:var(--navy);} .donut-center span{font-size:9.5px;color:var(--gray);text-transform:uppercase;}
+  .dl-item{font-size:12px;color:var(--teal-dark);margin-bottom:6px;}
+  .dl-sw{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle;}
+  .fin-row{display:grid;grid-template-columns:200px 1fr 230px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid #f0ede9;}
+  .fin-row:last-child{border-bottom:none;}
+  .fin-label{font-size:12px;font-weight:700;color:var(--navy);}
+  .fin-track{height:20px;background:#f0ede8;border-radius:5px;position:relative;overflow:hidden;}
+  .fin-bg{position:absolute;top:0;left:0;height:100%;background:#dcd6cf;}
+  .fin-fg{position:absolute;top:0;left:0;height:100%;background:var(--navy);}
+  .fin-vals{font-size:11px;color:var(--teal-dark);}
+  .vb-row{display:grid;grid-template-columns:140px 1fr 190px;gap:12px;align-items:center;padding:8px 0;}
+  .vb-label{font-size:12.5px;font-weight:700;color:var(--navy);}
+  .vb-track{height:22px;background:#f0ede8;border-radius:5px;overflow:hidden;}
+  .vb-fill{height:100%;} .vb-val{font-size:11.5px;color:var(--teal-dark);}
+  .changebox{background:#eaf0f7;border-left:5px solid var(--blue);border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+  .changebox h4{margin:0 0 8px;font-size:13px;color:var(--navy);}
+  .changebox ul{margin:0;padding-left:18px;} .changebox li{font-size:12.5px;line-height:1.6;color:var(--teal-dark);margin-bottom:4px;}
+  .kpi-row-4{grid-template-columns:repeat(4,1fr) !important;}
+  .kpi-mini{min-height:82px !important;}
+  .kpi-mini .kpi-value{font-size:17px !important;} .kpi-mini .kpi-label{font-size:9.8px !important;} .kpi-mini .kpi-sub{font-size:9.5px !important;}
+  .rk-row{display:grid;grid-template-columns:230px 1fr 130px;gap:12px;align-items:center;padding:6px 0;border-bottom:1px solid #f5f3f0;}
+  .rk-row:last-child{border-bottom:none;}
+  .rk-label{font-size:11.8px;font-weight:600;color:var(--navy);}
+  .rk-track{height:16px;background:#f0ede8;border-radius:4px;overflow:hidden;}
+  .rk-fill{height:100%;} .rk-val{font-size:11px;color:var(--teal-dark);text-align:right;font-weight:700;}
+  .triple-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:10px;}
+  .triple-block{background:#f7f5f2;border-radius:10px;padding:12px 14px;}
+  .triple-title{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+  .triple-line{display:grid;grid-template-columns:70px 1fr 46px;gap:8px;align-items:center;margin-bottom:5px;}
+  .triple-tag{font-size:9.5px;color:var(--gray);text-transform:uppercase;font-weight:700;}
+  .triple-track{height:10px;background:#e8e4de;border-radius:3px;overflow:hidden;}
+  .triple-fill{height:100%;} .triple-val{font-size:10px;color:var(--teal-dark);text-align:right;font-weight:700;}
+  @media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr);} .kpi-row-4{grid-template-columns:repeat(2,1fr) !important;}
+    .grid-2, .grid-3, .triple-grid{grid-template-columns:1fr;} .bar-row, .fin-row, .vb-row, .rk-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="title-block">
+      <h1>Informe Ejecutivo de Deuda Inmobiliaria · Directorio Tasco</h1>
+      <p>Cifras en UF. <span class="src">CALENDARIO</span> = Calendario vctos créditos y bol (fuente real de deuda/intereses/amortización). <span class="src">B09</span> ventas/inventario · <span class="src">AO</span> conciliación y clientes · <span class="src">MAESTRO</span> generalidades del proyecto.</p>
+    </div>
+    <div class="meta">Fecha de corte: 27-07-2026<br>Preparado por: Dirección de Finanzas (CFO)<br>Confidencial · Uso interno Directorio</div>
+  </header>
+
+  <nav class="tabs">
+    <a href="#resumen">1. Resumen</a>
+    <a href="#panel">2. Panel Directivo</a>
+    <a href="#generalidades">3. Generalidades</a>
+    <a href="#estructura">4. Estructura Deuda</a>
+    <a href="#vencimientos">5. Vencimientos</a>
+    <a href="#bancos">6. Bancos e Intereses</a>
+    <a href="#cobranza">7. Cobranza por Cliente</a>
+    <a href="#matriz">8. Obra vs Ventas</a>
+    <a href="#alertas">9. Alertas</a>
+    <a href="#kpis">10. KPIs Directorio</a>
+  </nav>
+
+  <!-- 1. RESUMEN -->
+  <section id="resumen" class="card">
+    <h2 class="section-title">1. Resumen Ejecutivo &amp; Salud Financiera Consolidada</h2>
+    <div class="kpi-row">
+      <div class="kpi-card kpi-0">
+        <div class="kpi-label">Deuda Bancaria Vigente <span class="src" style="background:rgba(255,255,255,.25)">CALENDARIO</span></div>
+        <div class="kpi-value">806.123 UF</div>
+        <div class="kpi-sub">4 de 8 proyectos del calendario tienen saldo vigente</div>
+      </div>
+      <div class="kpi-card kpi-1">
+        <div class="kpi-label">Amortizado (créditos del calendario)</div>
+        <div class="kpi-value">794.315 UF</div>
+        <div class="kpi-sub">Monto ya pagado de los créditos identificados en el calendario</div>
+      </div>
+      <div class="kpi-card kpi-2">
+        <div class="kpi-label">Interés Devengado (tramos vigentes)</div>
+        <div class="kpi-value">16.035 UF</div>
+        <div class="kpi-sub">Solo tramos con saldo adeudado &gt; 0</div>
+      </div>
+      <div class="kpi-card kpi-3">
+        <div class="kpi-label">Interés al Vencimiento (proyección)</div>
+        <div class="kpi-value">34.639 UF</div>
+        <div class="kpi-sub">Proyección de interés restante de los tramos vigentes</div>
+      </div>
+      <div class="kpi-card kpi-4">
+        <div class="kpi-label">% Conciliado del Portafolio <span class="src" style="background:rgba(255,255,255,.25)">AO/B09</span></div>
+        <div class="kpi-value">61,5%</div>
+        <div class="kpi-sub">1.619.111 UF pendientes de conciliar</div>
+      </div>
+    </div>
+    <h3>Diagnóstico Financiero</h3>
+    <p>Con el calendario real de créditos, la deuda bancaria vigente del portafolio es de <b>806.123 UF</b>, concentrada en 4 de 8 proyectos con tramos en el calendario. Ya se han amortizado <b>794.315 UF</b> en los proyectos con crédito cerrado.</p>
+    <p>Toda la deuda vigente vence dentro de los próximos 12 meses (estructura de créditos de corto plazo que se renueva/rota periódicamente), lo que exige gestión activa de refinanciamiento, no solo de cobranza.</p>
+    <p>La brecha entre venta y cobranza sigue siendo el foco: el portafolio ha vendido 4.337.255 UF (B09) pero solo ha conciliado (cobrado, AO) el <b>61,5%</b>, dejando 1.619.111 UF pendientes.</p>
+    <div class="note"><b>Auditoría de datos:</b> Parque Machalí y Parque Estébanez no tienen tramos en el calendario de créditos; sus cifras de deuda/amortización siguen siendo un proxy del Maestro de Proyectos y están marcadas como tal (fuente_deuda = "sin_calendario") en el dataset.</div>
+  </section>
+
+  <!-- 2. PANEL DIRECTIVO -->
+  <section id="panel" class="card">
+    <h2 class="section-title">2. Panel Directivo — Consolidado por Proyecto</h2>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead><tr>
+        <th>Proyecto</th><th class="num">Unidades</th><th class="num">Un. a la Venta<span class="src">B09</span></th>
+        <th class="num">Un. Vendida<span class="src">B09</span></th><th class="num">Ingresos Totales<span class="src">B09</span></th>
+        <th class="num">Línea Aprobada<span class="src">MAESTRO</span></th><th class="num">Avance Físico</th>
+        <th class="num">Avance Comercial<span class="src">B09</span></th><th class="num">Avance Deuda</th>
+        <th class="num">Girado<span class="src">CALEND.</span></th><th class="num">Amort.<span class="src">CALEND.</span></th>
+        <th class="num">Deuda Vigente<span class="src">CALEND.</span></th><th class="num">Conciliado<span class="src">AO</span></th>
+        <th class="num">% Conciliado</th>
+        <th class="num">Gastos Financieros a la Fecha<span class="src">CALEND.</span></th>
+        <th class="num">Crédito de Enlace<span class="src">MAESTRO</span></th>
+        <th>Riesgo</th>
+      </tr></thead>
+      <tbody>
+    <tr>
+      <td>Alcala las Torres<div class="muted">Peñalolen · Banco de Chile</div></td>
+      <td class="num">307</td>
+      <td class="num">294</td>
+      <td class="num">292</td>
+      <td class="num">654.700</td>
+      <td class="num">423.000</td>
+      <td class="num">100,0%</td>
+      <td class="num">99,3%</td>
+      <td class="num">93,0%</td>
+      <td class="num">393.563</td>
+      <td class="num">0</td>
+      <td class="num">393.563</td>
+      <td class="num">53.131</td>
+      <td class="num">8,2%</td>
+      <td class="num">22.529</td>
+      <td class="num">70.800</td>
+      <td><span class='badge' style='background:#ad4736'>ALTO</span></td>
+    </tr>
+    <tr>
+      <td>La Dehesa<div class="muted">Lo Barnechea · BICE</div></td>
+      <td class="num">36</td>
+      <td class="num">36</td>
+      <td class="num">36</td>
+      <td class="num">682.822</td>
+      <td class="num">323.000</td>
+      <td class="num">100,0%</td>
+      <td class="num">100,0%</td>
+      <td class="num">58,0%</td>
+      <td class="num">187.325</td>
+      <td class="num">0</td>
+      <td class="num">187.325</td>
+      <td class="num">233.426</td>
+      <td class="num">34,2%</td>
+      <td class="num">17.449</td>
+      <td class="num">0</td>
+      <td><span class='badge' style='background:#ad4736'>ALTO</span></td>
+    </tr>
+    <tr>
+      <td>Mirador Limache DS19<div class="muted">Limache · BICE</div></td>
+      <td class="num">216</td>
+      <td class="num">216</td>
+      <td class="num">196</td>
+      <td class="num">407.350</td>
+      <td class="num">198.834</td>
+      <td class="num">100,0%</td>
+      <td class="num">90,7%</td>
+      <td class="num">100,7%</td>
+      <td class="num">200.143</td>
+      <td class="num">36.532</td>
+      <td class="num">163.611</td>
+      <td class="num">24.486</td>
+      <td class="num">6,7%</td>
+      <td class="num">44.470</td>
+      <td class="num">64.800</td>
+      <td><span class='badge' style='background:#ad4736'>ALTO</span></td>
+    </tr>
+    <tr>
+      <td>Rocas del Aguila<div class="muted">Lo Barnechea · BCI</div></td>
+      <td class="num">18</td>
+      <td class="num">18</td>
+      <td class="num">8</td>
+      <td class="num">356.528</td>
+      <td class="num">183.593</td>
+      <td class="num">28,3%</td>
+      <td class="num">44,4%</td>
+      <td class="num">33,6%</td>
+      <td class="num">61.623</td>
+      <td class="num">0</td>
+      <td class="num">61.623</td>
+      <td class="num">9.093</td>
+      <td class="num">6,2%</td>
+      <td class="num">553</td>
+      <td class="num">0</td>
+      <td><span class='badge' style='background:#c99a3d'>MEDIO</span></td>
+    </tr>
+    <tr>
+      <td>Costa del Mar DS19<div class="muted">Quintero · Banco Estado</div></td>
+      <td class="num">277</td>
+      <td class="num">277</td>
+      <td class="num">277</td>
+      <td class="num">520.455</td>
+      <td class="num">284.655</td>
+      <td class="num">100,0%</td>
+      <td class="num">100,0%</td>
+      <td class="num">100,0%</td>
+      <td class="num">284.655</td>
+      <td class="num">284.655</td>
+      <td class="num">0</td>
+      <td class="num">523.277</td>
+      <td class="num">100,5%</td>
+      <td class="num">51.955</td>
+      <td class="num">0</td>
+      <td><span class='badge' style='background:#1c6e42'>BAJO</span></td>
+    </tr>
+    <tr>
+      <td>Mirador del Aguila<div class="muted">Lo Barnechea · Banco de Chile</div></td>
+      <td class="num">26</td>
+      <td class="num">26</td>
+      <td class="num">24</td>
+      <td class="num">447.243</td>
+      <td class="num">212.846</td>
+      <td class="num">100,0%</td>
+      <td class="num">92,3%</td>
+      <td class="num">95,0%</td>
+      <td class="num">202.157</td>
+      <td class="num">202.157</td>
+      <td class="num">0</td>
+      <td class="num">320.987</td>
+      <td class="num">78,1%</td>
+      <td class="num">29.084</td>
+      <td class="num">s/i</td>
+      <td><span class='badge' style='background:#1c6e42'>BAJO</span></td>
+    </tr>
+    <tr>
+      <td>La Capellania DS19<div class="muted">Rinconada · Banco Estado</div></td>
+      <td class="num">175</td>
+      <td class="num">169</td>
+      <td class="num">169</td>
+      <td class="num">314.308</td>
+      <td class="num">174.828</td>
+      <td class="num">100,0%</td>
+      <td class="num">100,0%</td>
+      <td class="num">100,0%</td>
+      <td class="num">174.828</td>
+      <td class="num">174.828</td>
+      <td class="num">0</td>
+      <td class="num">313.425</td>
+      <td class="num">99,7%</td>
+      <td class="num">30.228</td>
+      <td class="num">300</td>
+      <td><span class='badge' style='background:#1c6e42'>BAJO</span></td>
+    </tr>
+    <tr>
+      <td>Holandesa departamentos<div class="muted">Temuco · Itaú</div></td>
+      <td class="num">61</td>
+      <td class="num">61</td>
+      <td class="num">50</td>
+      <td class="num">206.625</td>
+      <td class="num">115.600</td>
+      <td class="num">100,0%</td>
+      <td class="num">82,0%</td>
+      <td class="num">83,2%</td>
+      <td class="num">96.143</td>
+      <td class="num">96.143</td>
+      <td class="num">0</td>
+      <td class="num">112.740</td>
+      <td class="num">68,6%</td>
+      <td class="num">6.890</td>
+      <td class="num">0</td>
+      <td><span class='badge' style='background:#c99a3d'>MEDIO</span></td>
+    </tr>
+    <tr>
+      <td>San Juan Machali DS19<div class="muted">Machali · Estado</div></td>
+      <td class="num">152</td>
+      <td class="num">150</td>
+      <td class="num">150</td>
+      <td class="num">294.811</td>
+      <td class="num">0</td>
+      <td class="num">100,0%</td>
+      <td class="num">100,0%</td>
+      <td class="num">s/i</td>
+      <td class="num">s/i</td>
+      <td class="num">s/i</td>
+      <td class="num">0</td>
+      <td class="num">310.911</td>
+      <td class="num">105,5%</td>
+      <td class="num">s/i</td>
+      <td class="num">0</td>
+      <td><span class='badge' style='background:#1c6e42'>BAJO</span></td>
+    </tr>
+    <tr>
+      <td>Parque Estébanez (consol. E1+E2)<div class="muted">Temuco · BICE</div></td>
+      <td class="num">132</td>
+      <td class="num">134</td>
+      <td class="num">128</td>
+      <td class="num">817.948</td>
+      <td class="num">466.000</td>
+      <td class="num">100,0%</td>
+      <td class="num">95,5%</td>
+      <td class="num">s/i</td>
+      <td class="num">s/i</td>
+      <td class="num">s/i</td>
+      <td class="num">0</td>
+      <td class="num">767.261</td>
+      <td class="num">97,1%</td>
+      <td class="num">s/i</td>
+      <td class="num">0</td>
+      <td><span class='badge' style='background:#1c6e42'>BAJO</span></td>
+    </tr>
+    <tr class="total-row">
+      <td><b>TOTAL PORTAFOLIO</b></td>
+      <td class="num"><b>1.400</b></td>
+      <td class="num"><b>1.381</b></td>
+      <td class="num"><b>1.330</b></td>
+      <td class="num"><b>4.702.790</b></td>
+      <td class="num"><b>2.382.356</b></td>
+      <td class="num">—</td>
+      <td class="num">—</td>
+      <td class="num">—</td>
+      <td class="num"><b>1.600.438</b></td>
+      <td class="num"><b>794.315</b></td>
+      <td class="num"><b>806.123</b></td>
+      <td class="num"><b>2.668.737</b></td>
+      <td class="num">—</td>
+      <td class="num"><b>203.157</b></td>
+      <td class="num"><b>135.900</b></td>
+      <td>—</td>
+    </tr></tbody>
+    </table>
+    </div>
+    <div class="note">"Girado/Amort./Deuda Vigente" provienen del Calendario de créditos real cuando existe (ver columna Riesgo/fuente); Parque Machalí y Parque Estébanez usan el proxy del Maestro. "% Conciliado" = UF conciliadas (AO) / UF vendidas (B09). "Gastos Financieros a la Fecha" = interés pagado a la fecha (Calendario, columna "Pagados UF") + interés devengado no pagado (columna "Devengados UF"), por proyecto. "Crédito de Enlace" = línea de crédito de enlace del Maestro de Proyectos. La fila de totales no suma columnas de porcentaje ni Riesgo.</div>
+  </section>
+
+  <!-- 3. GENERALIDADES -->
+  <section id="generalidades" class="card">
+    <h2 class="section-title">3. Generalidades de los Proyectos <span class="src">MAESTRO</span></h2>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>Proyecto</th><th>Comuna</th><th>Tipología</th><th>Inicio Obras</th><th>Término Contractual</th><th class="num">Avance Físico</th><th class="num">Superficie Construida</th><th class="num">% IVA (recargo)</th><th>Banco Alzante</th></tr></thead>
+      <tbody><tr><td>Alcala las Torres</td><td>Peñalolen</td><td>Departamentos</td><td>30-07-2023</td><td>30-07-2025</td><td class='num'>100,0%</td><td class='num'>25.749 m²</td><td class='num'>1,0%</td><td>Banco de Chile</td></tr><tr><td>Mirador Limache DS19</td><td>Limache</td><td>Departamentos</td><td>01-12-2020</td><td>01-12-2022</td><td class='num'>100,0%</td><td class='num'>15.801 m²</td><td class='num'>0,0%</td><td>BICE</td></tr><tr><td>La Dehesa</td><td>Lo Barnechea</td><td>Casas</td><td>01-07-2023</td><td>30-07-2025</td><td class='num'>100,0%</td><td class='num'>7.395 m²</td><td class='num'>10,8%</td><td>BICE</td></tr><tr><td>Mirador del Aguila</td><td>Lo Barnechea</td><td>Departamentos</td><td>03-10-2022</td><td>26-03-2024</td><td class='num'>100,0%</td><td class='num'>7.370 m²</td><td class='num'>17,8%</td><td>Banco de Chile</td></tr><tr><td>La Capellania DS19</td><td>Rinconada</td><td>Casas</td><td>01-07-2021</td><td>01-07-2023</td><td class='num'>100,0%</td><td class='num'>11.487 m²</td><td class='num'>0,0%</td><td>Banco Estado</td></tr><tr><td>Holandesa departamentos</td><td>Temuco</td><td>Departamentos</td><td>15-08-2023</td><td>05-02-2025</td><td class='num'>100,0%</td><td class='num'>5.193 m²</td><td class='num'>10,8%</td><td>Itaú</td></tr><tr><td>Rocas del Aguila</td><td>Lo Barnechea</td><td>Casas</td><td>01-12-2025</td><td>01-08-2027</td><td class='num'>28,3%</td><td class='num'>4.854 m²</td><td class='num'>15,7%</td><td>BCI</td></tr><tr><td>Costa del Mar DS19</td><td>Quintero</td><td>Departamentos</td><td>s/i</td><td>s/i</td><td class='num'>100,0%</td><td class='num'>s/i m²</td><td class='num'>0,0%</td><td>Banco Estado</td></tr><tr><td>San Juan Machali DS19</td><td>Machali</td><td>Departamentos</td><td>s/i</td><td>s/i</td><td class='num'>100,0%</td><td class='num'>s/i m²</td><td class='num'>0,0%</td><td>Estado</td></tr><tr><td>Parque Estébanez (consol. E1+E2)</td><td>Temuco</td><td>Departamentos</td><td>s/i</td><td>s/i</td><td class='num'>100,0%</td><td class='num'>s/i m²</td><td class='num'>0,0%</td><td>BICE</td></tr></tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- 4. ESTRUCTURA DE LA DEUDA -->
+  <section id="estructura" class="card">
+    <h2 class="section-title">4. Estructura de la Deuda por Proyecto: Amortizado, Vigente y Por Girar</h2>
+    <p>Girado = Deuda Vigente + Amortizado (calendario real donde está disponible). "Por Girar" compara el Girado real contra la Línea Aprobada del Maestro (referencial).</p>
+    <div class="bar-legend">
+      <span><span class="bar-swatch" style="background:var(--green)"></span>Amortizado</span>
+      <span><span class="bar-swatch" style="background:var(--terracota)"></span>Deuda Vigente</span>
+      <span><span class="bar-swatch" style="background:var(--tan)"></span>Por Girar (vs línea Maestro)</span>
+    </div>
+    
+    <div class="bar-row">
+      <div class="bar-label">Alcala las Torres <span class='src'>CALENDARIO</span><div class="muted">Línea aprobada (Maestro): 423.000 UF · Banco de Chile</div></div>
+      <div class="bar-track"><div class='seg seg-deuda' style='width:83.74%' title='Deuda vigente: 393.563 UF'></div><div class='seg seg-porgirar' style='width:6.26%' title='Por girar (vs línea Maestro): 29.437 UF'></div></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 0</span><span class="lv-deuda">Vigente: 393.563</span><span class="lv-porgirar">Por girar: 29.437</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">La Dehesa <span class='src'>CALENDARIO</span><div class="muted">Línea aprobada (Maestro): 323.000 UF · BICE</div></div>
+      <div class="bar-track"><div class='seg seg-deuda' style='width:39.86%' title='Deuda vigente: 187.325 UF'></div><div class='seg seg-porgirar' style='width:28.87%' title='Por girar (vs línea Maestro): 135.675 UF'></div></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 0</span><span class="lv-deuda">Vigente: 187.325</span><span class="lv-porgirar">Por girar: 135.675</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Mirador Limache DS19 <span class='src'>CALENDARIO</span><div class="muted">Línea aprobada (Maestro): 198.834 UF · BICE</div><div class='muted' style='color:var(--amber);font-weight:700;'>&#9888; Girado real (200.143 UF) supera la línea aprobada del maestro (198.834 UF)</div></div>
+      <div class="bar-track"><div class='seg seg-amort' style='width:7.77%' title='Amortizado: 36.532 UF'></div><div class='seg seg-deuda' style='width:34.81%' title='Deuda vigente: 163.611 UF'></div></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 36.532</span><span class="lv-deuda">Vigente: 163.611</span><span class="lv-porgirar">Por girar: 0</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Mirador del Aguila <span class='src'>CALENDARIO</span><div class="muted">Línea aprobada (Maestro): 212.846 UF · Banco de Chile</div></div>
+      <div class="bar-track"><div class='seg seg-amort' style='width:43.01%' title='Amortizado: 202.157 UF'></div><div class='seg seg-porgirar' style='width:2.27%' title='Por girar (vs línea Maestro): 10.689 UF'></div></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 202.157</span><span class="lv-deuda">Vigente: 0</span><span class="lv-porgirar">Por girar: 10.689</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Parque Estébanez (consol. E1+E2) <span class='src'>MAESTRO (proxy)</span><div class="muted">Línea aprobada (Maestro): 466.000 UF · BICE</div></div>
+      <div class="bar-track"></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 0</span><span class="lv-deuda">Vigente: 0</span><span class="lv-porgirar">Por girar: s/i</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Costa del Mar DS19 <span class='src'>CALENDARIO</span><div class="muted">Línea aprobada (Maestro): 284.655 UF · Banco Estado</div><div class='muted' style='color:var(--amber);font-weight:700;'>&#9888; Girado real (284.655 UF) supera la línea aprobada del maestro (284.655 UF)</div></div>
+      <div class="bar-track"><div class='seg seg-amort' style='width:60.56%' title='Amortizado: 284.655 UF'></div></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 284.655</span><span class="lv-deuda">Vigente: 0</span><span class="lv-porgirar">Por girar: 0</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">La Capellania DS19 <span class='src'>CALENDARIO</span><div class="muted">Línea aprobada (Maestro): 174.828 UF · Banco Estado</div><div class='muted' style='color:var(--amber);font-weight:700;'>&#9888; Girado real (174.828 UF) supera la línea aprobada del maestro (174.828 UF)</div></div>
+      <div class="bar-track"><div class='seg seg-amort' style='width:37.20%' title='Amortizado: 174.828 UF'></div></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 174.828</span><span class="lv-deuda">Vigente: 0</span><span class="lv-porgirar">Por girar: 0</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Holandesa departamentos <span class='src'>CALENDARIO</span><div class="muted">Línea aprobada (Maestro): 115.600 UF · Itaú</div></div>
+      <div class="bar-track"><div class='seg seg-amort' style='width:20.46%' title='Amortizado: 96.143 UF'></div><div class='seg seg-porgirar' style='width:4.14%' title='Por girar (vs línea Maestro): 19.457 UF'></div></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 96.143</span><span class="lv-deuda">Vigente: 0</span><span class="lv-porgirar">Por girar: 19.457</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Rocas del Aguila <span class='src'>CALENDARIO</span><div class="muted">Línea aprobada (Maestro): 183.593 UF · BCI</div></div>
+      <div class="bar-track"><div class='seg seg-deuda' style='width:13.11%' title='Deuda vigente: 61.623 UF'></div><div class='seg seg-porgirar' style='width:25.95%' title='Por girar (vs línea Maestro): 121.970 UF'></div></div>
+      <div class="bar-legend-vals"><span class="lv-amort">Amort.: 0</span><span class="lv-deuda">Vigente: 61.623</span><span class="lv-porgirar">Por girar: 121.970</span></div>
+    </div><div class='bar-row'><div class='bar-label'>San Juan Machali DS19<div class='muted'>Sin línea de crédito ni calendario informado</div></div><div class='bar-track'><div class='bar-empty'>Sin datos</div></div><div class='bar-legend-vals muted'>s/i</div></div>
+    <div class="note">Escala común de 0 a 470.000 UF. Etiqueta CALENDARIO = dato real del calendario de créditos; MAESTRO (proxy) = sin tramos en el calendario, se usa el dato agregado del Maestro de Proyectos.</div>
+  </section>
+
+  <!-- 5. VENCIMIENTOS -->
+  <section id="vencimientos" class="card">
+    <h2 class="section-title">5. Calendario Real de Vencimientos <span class="src">CALENDARIO</span></h2>
+    <p>Perfil de vencimiento de los tramos de crédito con saldo vigente (806.123 UF), agrupados por plazo restante desde la fecha de corte.</p>
+    <div class='vb-row'><div class='vb-label'>0-3 meses</div><div class='vb-track'><div class='vb-fill' style='width:21.5%;background:#ad4736'></div></div><div class='vb-val'>173.154 UF (21,5%)</div></div><div class='vb-row'><div class='vb-label'>3-6 meses</div><div class='vb-track'><div class='vb-fill' style='width:41.9%;background:#c99a3d'></div></div><div class='vb-val'>337.787 UF (41,9%)</div></div><div class='vb-row'><div class='vb-label'>6-12 meses</div><div class='vb-track'><div class='vb-fill' style='width:36.6%;background:#465768'></div></div><div class='vb-val'>295.181 UF (36,6%)</div></div>
+    <h3>Próximos Vencimientos (dentro de 180 días)</h3>
+    <table>
+      <thead><tr><th>Proyecto</th><th>Banco</th><th>Fecha Vcto.</th><th class="num">Días</th><th class="num">Adeudado (UF)</th><th class="num">Tasa</th><th class="num">Interés del Período</th></tr></thead>
+      <tbody><tr><td>La Dehesa</td><td>BICE</td><td>27-07-2026</td><td class='num'>0 días</td><td class='num'>2.500</td><td class='num'>6,80%</td><td class='num'>171</td></tr><tr><td>Alcala las Torres</td><td>Banco de Chile</td><td>13-08-2026</td><td class='num'>17 días</td><td class='num'>3.311</td><td class='num'>6,96%</td><td class='num'>229</td></tr><tr><td>La Dehesa</td><td>BICE</td><td>21-08-2026</td><td class='num'>25 días</td><td class='num'>7.626</td><td class='num'>6,62%</td><td class='num'>503</td></tr><tr><td>Alcala las Torres</td><td>Banco de Chile</td><td>24-08-2026</td><td class='num'>28 días</td><td class='num'>8.000</td><td class='num'>3,76%</td><td class='num'>139</td></tr><tr><td>Alcala las Torres</td><td>Banco de Chile</td><td>27-08-2026</td><td class='num'>31 días</td><td class='num'>12.200</td><td class='num'>4,25%</td><td class='num'>517</td></tr><tr><td>Mirador Limache DS19</td><td>BICE</td><td>03-09-2026</td><td class='num'>38 días</td><td class='num'>6.041</td><td class='num'>6,12%</td><td class='num'>370</td></tr><tr><td>Mirador Limache DS19</td><td>BICE</td><td>07-09-2026</td><td class='num'>42 días</td><td class='num'>36.064</td><td class='num'>6,12%</td><td class='num'>2.213</td></tr><tr><td>La Dehesa</td><td>BICE</td><td>10-09-2026</td><td class='num'>45 días</td><td class='num'>7.598</td><td class='num'>6,62%</td><td class='num'>510</td></tr><tr><td>La Dehesa</td><td>BICE</td><td>10-09-2026</td><td class='num'>45 días</td><td class='num'>7.598</td><td class='num'>6,62%</td><td class='num'>510</td></tr><tr><td>La Dehesa</td><td>BICE</td><td>10-09-2026</td><td class='num'>45 días</td><td class='num'>4.999</td><td class='num'>6,65%</td><td class='num'>306</td></tr><tr><td>Alcala las Torres</td><td>Banco de Chile</td><td>14-09-2026</td><td class='num'>49 días</td><td class='num'>4.105</td><td class='num'>6,96%</td><td class='num'>276</td></tr><tr><td>Alcala las Torres</td><td>Banco de Chile</td><td>08-10-2026</td><td class='num'>73 días</td><td class='num'>14.877</td><td class='num'>2,15%</td><td class='num'>168</td></tr><tr><td>Alcala las Torres</td><td>Banco de Chile</td><td>08-10-2026</td><td class='num'>73 días</td><td class='num'>8.222</td><td class='num'>2,15%</td><td class='num'>86</td></tr><tr><td>Alcala las Torres</td><td>Banco de Chile</td><td>08-10-2026</td><td class='num'>73 días</td><td class='num'>17.938</td><td class='num'>2,15%</td><td class='num'>187</td></tr><tr><td>La Dehesa</td><td>BICE</td><td>09-10-2026</td><td class='num'>74 días</td><td class='num'>12.000</td><td class='num'>6,68%</td><td class='num'>795</td></tr></tbody>
+    </table>
+    <div class="note">No hay tramos vencidos ni con vencimiento mayor a 12 meses: la estructura de deuda es de corto plazo y rota periódicamente. "Interés del Período" = Adeudado (UF) × Tasa anual × días entre la fecha de otorgamiento u última renovación (la más tardía) y la fecha de vencimiento, base 360.</div>
+  </section>
+
+  <!-- 6. BANCOS E INTERESES -->
+  <section id="bancos" class="card">
+    <h2 class="section-title">6. Deuda por Banco e Intereses</h2>
+    <div class="grid-2">
+      <div><h3>Deuda Vigente por Banco Alzante <span class="src">CALENDARIO</span></h3>
+        <div class="donut-wrap"><div class="donut" style="background:conic-gradient(#0e2447 0.00% 48.82%, #465768 48.82% 92.36%, #ad4736 92.36% 100.00%);">
+        <div class="donut-center"><b>806.123</b><span>UF vigentes</span></div></div><div><div class='dl-item'><span class='dl-sw' style='background:#0e2447'></span>Banco de Chile: 393.563 UF (48,8%)</div><div class='dl-item'><span class='dl-sw' style='background:#465768'></span>BICE: 350.936 UF (43,5%)</div><div class='dl-item'><span class='dl-sw' style='background:#ad4736'></span>BCI: 61.623 UF (7,6%)</div></div></div>
+      </div>
+      <div><h3>Gastos Financieros por Proyecto</h3>
+        <div class="fin-row" style="border-bottom:none;padding-top:0;"><div></div>
+          <div style="display:flex;gap:14px;font-size:11px;color:var(--teal-dark);">
+            <span><span class="bar-swatch" style="background:var(--navy)"></span>Interés devengado</span>
+            <span><span class="bar-swatch" style="background:#dcd6cf"></span>Interés proyectado a término</span>
+          </div><div></div>
+        </div>
+        
+    <div class="fin-row">
+      <div class="fin-label">Alcala las Torres</div>
+      <div class="fin-track"><div class="fin-bg" style="width:100.00%"></div><div class="fin-fg" style="width:34.29%"></div></div>
+      <div class="fin-vals"><b>6.486</b> <span class="muted">/ 18.912 UF proyectado (tramos vigentes)</span></div>
+    </div>
+    <div class="fin-row">
+      <div class="fin-label">La Dehesa</div>
+      <div class="fin-track"><div class="fin-bg" style="width:87.98%"></div><div class="fin-fg" style="width:25.48%"></div></div>
+      <div class="fin-vals"><b>4.819</b> <span class="muted">/ 16.639 UF proyectado (tramos vigentes)</span></div>
+    </div>
+    <div class="fin-row">
+      <div class="fin-label">Mirador Limache DS19</div>
+      <div class="fin-track"><div class="fin-bg" style="width:66.67%"></div><div class="fin-fg" style="width:22.08%"></div></div>
+      <div class="fin-vals"><b>4.176</b> <span class="muted">/ 12.609 UF proyectado (tramos vigentes)</span></div>
+    </div>
+    <div class="fin-row">
+      <div class="fin-label">Rocas del Aguila</div>
+      <div class="fin-track"><div class="fin-bg" style="width:13.29%"></div><div class="fin-fg" style="width:2.93%"></div></div>
+      <div class="fin-vals"><b>553</b> <span class="muted">/ 2.513 UF proyectado (tramos vigentes)</span></div>
+    </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. COBRANZA POR CLIENTE -->
+  <section id="cobranza" class="card">
+    <h2 class="section-title">7. Detalle de Cobranza por Cliente <span class="src">AO</span> — Top 8 Saldos Pendientes por Proyecto de Riesgo</h2>
+    <div class="grid-3">
+      <div><h3>Alcalá las Torres</h3><table><thead><tr><th>Cliente</th><th>Unidad</th><th>Estado</th><th class='num'>Comprometido</th><th class='num'>Conciliado</th><th class='num'>Pendiente</th></tr></thead><tbody><tr><td>Yulmary Del Valle Acosta Repillosa</td><td>ALC:D-0208-TB</td><td>Promesa</td><td class='num'>2.800</td><td class='num'>100</td><td class='num'>2.700</td></tr><tr><td>Nicole Daniela Ibarra Soto</td><td>ALC:D-0207-TA</td><td>Promesa</td><td class='num'>2.800</td><td class='num'>100</td><td class='num'>2.700</td></tr><tr><td>Carolina Alejandra Ruiz Pinilla</td><td>ALC:D-0202-TB</td><td>Promesa</td><td class='num'>2.800</td><td class='num'>100</td><td class='num'>2.700</td></tr><tr><td>Francisco Amaro Díaz Águila</td><td>ALC:D-0205-TA</td><td>Promesa</td><td class='num'>2.800</td><td class='num'>100</td><td class='num'>2.700</td></tr><tr><td>Domenico Benito Ramirez Aristimuno</td><td>ALC:D-0209-TB</td><td>Promesa</td><td class='num'>2.800</td><td class='num'>100</td><td class='num'>2.700</td></tr><tr><td>Sandra Natalie Gamboa Guzmán</td><td>ALC:D-0210-TB</td><td>Promesa</td><td class='num'>2.800</td><td class='num'>100</td><td class='num'>2.700</td></tr><tr><td>Anestie Maloid Neculqueo Arriarán</td><td>ALC:D-0215-TB</td><td>Reserva</td><td class='num'>2.800</td><td class='num'>100</td><td class='num'>2.700</td></tr><tr><td>Walter Andres Reyes Cid</td><td>ALC:D-0207-TB</td><td>Promesa</td><td class='num'>2.800</td><td class='num'>100</td><td class='num'>2.700</td></tr></tbody></table></div>
+      <div><h3>Mirador de Limache</h3><table><thead><tr><th>Cliente</th><th>Unidad</th><th>Estado</th><th class='num'>Comprometido</th><th class='num'>Conciliado</th><th class='num'>Pendiente</th></tr></thead><tbody><tr><td>Omar Felipe Escorza Soto</td><td>MDL:D-34-G</td><td>Reserva</td><td class='num'>2.200</td><td class='num'>5</td><td class='num'>2.195</td></tr><tr><td>Caterin Yuditt Ulloa Pinto</td><td>MDL:D-13-F</td><td>Promesa</td><td class='num'>2.200</td><td class='num'>18</td><td class='num'>2.182</td></tr><tr><td>Daniela Andrea Escobar Varas</td><td>MDL:D-13-J</td><td>Reserva</td><td class='num'>2.200</td><td class='num'>57</td><td class='num'>2.143</td></tr><tr><td>Felipe Andrés Uribe Tonelli</td><td>MDL:D-13-B</td><td>Reserva</td><td class='num'>2.200</td><td class='num'>58</td><td class='num'>2.142</td></tr><tr><td>Patricia Isabel Rodriguez Grazziani</td><td>MDL:D-13-C</td><td>Promesa</td><td class='num'>2.200</td><td class='num'>58</td><td class='num'>2.142</td></tr><tr><td>Abraham Moises Bascur Rojas</td><td>MDL:D-12-J</td><td>Promesa</td><td class='num'>2.200</td><td class='num'>58</td><td class='num'>2.142</td></tr><tr><td>Rodrigo Osvaldo Villavicencio Collao</td><td>MDL:D-12-E</td><td>Reserva</td><td class='num'>2.200</td><td class='num'>58</td><td class='num'>2.142</td></tr><tr><td>Susan Nicoly Navarro Gomez</td><td>MDL:D-12-H</td><td>Reserva</td><td class='num'>2.200</td><td class='num'>62</td><td class='num'>2.138</td></tr></tbody></table></div>
+      <div><h3>La Dehesa</h3><table><thead><tr><th>Cliente</th><th>Unidad</th><th>Estado</th><th class='num'>Comprometido</th><th class='num'>Conciliado</th><th class='num'>Pendiente</th></tr></thead><tbody><tr><td>Maria Teresa Boetsch Mira</td><td>LDH:C-010-2-B</td><td>Promesa</td><td class='num'>22.560</td><td class='num'>0</td><td class='num'>22.560</td></tr><tr><td>Ricardo Ibañez Reyes</td><td>LDH:C-006-2-A</td><td>Promesa</td><td class='num'>23.424</td><td class='num'>1.171</td><td class='num'>22.253</td></tr><tr><td>Horacio Jimenez Marin</td><td>LDH:C-003-1-A</td><td>Promesa</td><td class='num'>22.160</td><td class='num'>1.635</td><td class='num'>20.525</td></tr><tr><td>Eduardo Guzman Vial</td><td>LDH:C-015-3-B</td><td>Promesa</td><td class='num'>21.271</td><td class='num'>1.064</td><td class='num'>20.207</td></tr><tr><td>Juan Pablo Ried Silva</td><td>LDH:C-009-2-C</td><td>Promesa</td><td class='num'>20.815</td><td class='num'>1.041</td><td class='num'>19.774</td></tr><tr><td>Juan Diego Havraneg Delpiazzo</td><td>LDH:C-007-2-C</td><td>Promesa</td><td class='num'>20.715</td><td class='num'>1.036</td><td class='num'>19.679</td></tr><tr><td>Esteban Chacon</td><td>LDH:C-004-1-C</td><td>Promesa</td><td class='num'>20.455</td><td class='num'>2.045</td><td class='num'>18.410</td></tr><tr><td>Manuel Jose Manterola Covarrubias</td><td>LDH:C-013-3-A</td><td>Promesa</td><td class='num'>18.877</td><td class='num'>944</td><td class='num'>17.933</td></tr></tbody></table></div>
+    </div>
+    <div class="note">Ordenado por saldo pendiente descendente, excluye unidades desistidas. Uso interno — no distribuir fuera del Directorio.</div>
+  </section>
+
+  <!-- 8. MATRIZ -->
+  <section id="matriz" class="card">
+    <h2 class="section-title">8. Matriz de Cruce Operativo: Obra vs. Ventas vs. Cobranza</h2>
+    <p>Ver ranking de % conciliado y % vendido en la pestaña 10 (KPIs Directorio) para identificar rápidamente los proyectos con mayor descalce entre lo vendido y lo cobrado.</p>
+    <div class="triple-grid"><div class='triple-block'><div class='triple-title'>Alcala las Torres</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:99.3%;background:#465768'></div></div><div class='triple-val'>99,3%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:8.2%;background:#ad4736'></div></div><div class='triple-val'>8,2%</div></div></div><div class='triple-block'><div class='triple-title'>Costa del Mar DS19</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#465768'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,5%</div></div></div><div class='triple-block'><div class='triple-title'>Holandesa departamentos</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:82.0%;background:#465768'></div></div><div class='triple-val'>82,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:68.6%;background:#c99a3d'></div></div><div class='triple-val'>68,6%</div></div></div><div class='triple-block'><div class='triple-title'>La Capellania DS19</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#465768'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:99.7%;background:#1c6e42'></div></div><div class='triple-val'>99,7%</div></div></div><div class='triple-block'><div class='triple-title'>La Dehesa</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#465768'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:34.2%;background:#ad4736'></div></div><div class='triple-val'>34,2%</div></div></div><div class='triple-block'><div class='triple-title'>Mirador Limache DS19</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:90.7%;background:#465768'></div></div><div class='triple-val'>90,7%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:6.7%;background:#ad4736'></div></div><div class='triple-val'>6,7%</div></div></div><div class='triple-block'><div class='triple-title'>Mirador del Aguila</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:92.3%;background:#465768'></div></div><div class='triple-val'>92,3%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:78.1%;background:#1c6e42'></div></div><div class='triple-val'>78,1%</div></div></div><div class='triple-block'><div class='triple-title'>Parque Estébanez (consol. E1+E2)</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:95.5%;background:#465768'></div></div><div class='triple-val'>95,5%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:97.1%;background:#1c6e42'></div></div><div class='triple-val'>97,1%</div></div></div><div class='triple-block'><div class='triple-title'>Rocas del Aguila</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:28.3%;background:#1c6e42'></div></div><div class='triple-val'>28,3%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:44.4%;background:#465768'></div></div><div class='triple-val'>44,4%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:6.2%;background:#c99a3d'></div></div><div class='triple-val'>6,2%</div></div></div><div class='triple-block'><div class='triple-title'>San Juan Machali DS19</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#465768'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>105,5%</div></div></div></div>
+  </section>
+
+  <!-- 9. ALERTAS -->
+  <section id="alertas" class="card">
+    <h2 class="section-title">9. Alertas Estratégicas y Plan de Acción para el Directorio</h2>
+    <h3>Top Proyectos en Zona de Riesgo (Alto)</h3>
+    <div class="alert rojo"><h4>Alcala las Torres — 393.563 UF de deuda vigente</h4>
+    <p>Avance de obra 100,0%, 99,3% de unidades vendidas, solo 8,2% conciliado (595.969 UF por recuperar). Banco: Banco de Chile.</p></div><div class="alert rojo"><h4>La Dehesa — 187.325 UF de deuda vigente</h4>
+    <p>Avance de obra 100,0%, 100,0% de unidades vendidas, solo 34,2% conciliado (399.990 UF por recuperar). Banco: BICE.</p></div><div class="alert rojo"><h4>Mirador Limache DS19 — 163.611 UF de deuda vigente</h4>
+    <p>Avance de obra 100,0%, 90,7% de unidades vendidas, solo 6,7% conciliado (338.864 UF por recuperar). Banco: BICE.</p></div>
+    <h3>Proyectos en Riesgo Medio</h3>
+    <div class="alert amarillo"><h4>Rocas del Aguila</h4>
+    <p>Avance de obra 28,3%, 44,4% vendido, 6,2% conciliado. Deuda vigente: 61.623 UF.</p></div><div class="alert amarillo"><h4>Holandesa departamentos</h4>
+    <p>Avance de obra 100,0%, 82,0% vendido, 68,6% conciliado. Deuda vigente: 0 UF.</p></div>
+    <h3>Recomendaciones Concretas</h3>
+    <ul class="action-list">
+      <li><b>Plan de cobranza acelerada</b> en los proyectos de riesgo alto — concentran la mayor parte de la deuda vigente real y de las UF pendientes de conciliar.</li>
+      <li><b>Gestión activa de renovación de tramos:</b> revisar el calendario de vencimientos (sección 5) para agendar refinanciamiento con los bancos acreedores antes de cada vencimiento.</li>
+      <li><b>Actualizar el Maestro de Proyectos</b> con los saldos reales del calendario de créditos para los proyectos ya amortizados.</li>
+      <li><b>Incorporar Parque Machalí y Parque Estébanez</b> al calendario de créditos si aún mantienen alguna obligación, o confirmar que están cerrados sin deuda.</li>
+    </ul>
+    <div class="note"><b>Auto-auditoría final:</b> deuda vigente (806.123 UF), amortizado (794.315 UF), intereses devengados (16.035 UF) e intereses al vencimiento (34.639 UF) se recalculan siempre desde final_dataset_deuda.json al correr este script — no hay cifras "pegadas" a mano en esta sección.</div>
+  </section>
+
+  
+  <!-- 10. KPIS PARA DIRECTORIO -->
+  <section id="kpis" class="card">
+    <h2 class="section-title">10. Banco de KPIs para Directorio — Cards y Gráficos de Apoyo</h2>
+    <p>Repositorio ampliado de indicadores y gráficos, listos para copiar/adaptar en otras presentaciones al Directorio. Agrupados por Deuda, Ventas, Cobranza, Obra y Riesgo.</p>
+
+    <h3>Deuda y Financiamiento</h3>
+    <div class="kpi-row kpi-row-4">
+      <div class="kpi-card kpi-mini kpi-0"><div class="kpi-label">Total Girado</div><div class="kpi-value">1.600.438 UF</div><div class="kpi-sub">Amortizado + Vigente (créditos del calendario)</div></div>
+      <div class="kpi-card kpi-mini kpi-1"><div class="kpi-label">Total Amortizado</div><div class="kpi-value">794.315 UF</div><div class="kpi-sub">49,6% del girado total</div></div>
+      <div class="kpi-card kpi-mini kpi-2"><div class="kpi-label">Deuda Vigente</div><div class="kpi-value">806.123 UF</div><div class="kpi-sub">50,4% del girado total</div></div>
+      <div class="kpi-card kpi-mini kpi-3"><div class="kpi-label">Proyectos con Deuda / Total</div><div class="kpi-value">4 / 8</div><div class="kpi-sub">4 proyectos 100% amortizados</div></div>
+    </div>
+    <div class="kpi-row kpi-row-4">
+      <div class="kpi-card kpi-mini kpi-4"><div class="kpi-label">Interés Devengado (tramos vigentes)</div><div class="kpi-value">16.035 UF</div><div class="kpi-sub">Costo financiero ya incurrido</div></div>
+      <div class="kpi-card kpi-mini kpi-0"><div class="kpi-label">Interés Proyectado a Término</div><div class="kpi-value">34.639 UF</div><div class="kpi-sub">Costo financiero total estimado: 50.673 UF</div></div>
+      <div class="kpi-card kpi-mini kpi-1"><div class="kpi-label">Concentración Bancaria (HHI/100)</div><div class="kpi-value">43,4</div><div class="kpi-sub">Top banco: Banco de Chile (48,8%)</div></div>
+      <div class="kpi-card kpi-mini kpi-2"><div class="kpi-label">Cobertura Venta/Deuda</div><div class="kpi-value">5,38x</div><div class="kpi-sub">UF vendidas por cada UF de deuda vigente</div></div>
+    </div>
+    <div class="kpi-row kpi-row-4">
+      <div class="kpi-card kpi-mini kpi-3"><div class="kpi-label">Vence en 0-3 meses</div><div class="kpi-value">173.154 UF</div><div class="kpi-sub">21,5% de la deuda vigente</div></div>
+      <div class="kpi-card kpi-mini kpi-4"><div class="kpi-label">Vence en 3-6 meses</div><div class="kpi-value">337.787 UF</div><div class="kpi-sub">41,9% de la deuda vigente</div></div>
+      <div class="kpi-card kpi-mini kpi-0"><div class="kpi-label">Vence en 6-12 meses</div><div class="kpi-value">295.181 UF</div><div class="kpi-sub">36,6% de la deuda vigente</div></div>
+      <div class="kpi-card kpi-mini kpi-1"><div class="kpi-label">Deuda Vigente / m² Construido</div><div class="kpi-value">10,4 UF/m²</div><div class="kpi-sub">Sobre proyectos con deuda y superficie informada</div></div>
+    </div>
+
+    <div class="grid-2" style="margin-top:16px;">
+      <div><h3>Ranking: Deuda Vigente por Proyecto</h3><div class='rk-row'><div class='rk-label'>Alcala las Torres</div><div class='rk-track'><div class='rk-fill' style='width:100.0%;background:#ad4736'></div></div><div class='rk-val'>393.563 UF</div></div><div class='rk-row'><div class='rk-label'>La Dehesa</div><div class='rk-track'><div class='rk-fill' style='width:47.6%;background:#ad4736'></div></div><div class='rk-val'>187.325 UF</div></div><div class='rk-row'><div class='rk-label'>Mirador Limache DS19</div><div class='rk-track'><div class='rk-fill' style='width:41.6%;background:#ad4736'></div></div><div class='rk-val'>163.611 UF</div></div><div class='rk-row'><div class='rk-label'>Rocas del Aguila</div><div class='rk-track'><div class='rk-fill' style='width:15.7%;background:#c99a3d'></div></div><div class='rk-val'>61.623 UF</div></div><div class='rk-row'><div class='rk-label'>Mirador del Aguila</div><div class='rk-track'><div class='rk-fill' style='width:0.0%;background:#1c6e42'></div></div><div class='rk-val'>0 UF</div></div><div class='rk-row'><div class='rk-label'>La Capellania DS19</div><div class='rk-track'><div class='rk-fill' style='width:0.0%;background:#1c6e42'></div></div><div class='rk-val'>0 UF</div></div><div class='rk-row'><div class='rk-label'>Holandesa departamentos</div><div class='rk-track'><div class='rk-fill' style='width:0.0%;background:#c99a3d'></div></div><div class='rk-val'>0 UF</div></div><div class='rk-row'><div class='rk-label'>Costa del Mar DS19</div><div class='rk-track'><div class='rk-fill' style='width:0.0%;background:#1c6e42'></div></div><div class='rk-val'>0 UF</div></div></div>
+      <div><h3>Composición de Riesgo del Portafolio</h3>
+        <div class="donut-wrap"><div class="donut" style="background:conic-gradient(#ad4736 0.00% 30.00%, #c99a3d 30.00% 50.00%, #1c6e42 50.00% 100.00%);">
+        <div class="donut-center"><b>10</b><span>proyectos</span></div></div><div><div class='dl-item'><span class='dl-sw' style='background:#ad4736'></span>Riesgo Alto: 3 proyectos</div><div class='dl-item'><span class='dl-sw' style='background:#c99a3d'></span>Riesgo Medio: 2 proyectos</div><div class='dl-item'><span class='dl-sw' style='background:#1c6e42'></span>Riesgo Bajo: 5 proyectos</div></div></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div><h3>Deuda Vigente por Banco</h3>
+        <div class="donut-wrap"><div class="donut" style="background:conic-gradient(#0e2447 0.00% 48.82%, #465768 48.82% 92.36%, #ad4736 92.36% 100.00%);">
+        <div class="donut-center"><b>806.123</b><span>UF</span></div></div><div><div class='dl-item'><span class='dl-sw' style='background:#0e2447'></span>Banco de Chile: 393.563 UF (48,8%)</div><div class='dl-item'><span class='dl-sw' style='background:#465768'></span>BICE: 350.936 UF (43,5%)</div><div class='dl-item'><span class='dl-sw' style='background:#ad4736'></span>BCI: 61.623 UF (7,6%)</div></div></div>
+      </div>
+      <div><h3>Perfil de Vencimientos</h3><div class='rk-row'><div class='rk-label'>0-3 meses</div><div class='rk-track'><div class='rk-fill' style='width:21.5%;background:#ad4736'></div></div><div class='rk-val'>173.154 UF</div></div><div class='rk-row'><div class='rk-label'>3-6 meses</div><div class='rk-track'><div class='rk-fill' style='width:41.9%;background:#c99a3d'></div></div><div class='rk-val'>337.787 UF</div></div><div class='rk-row'><div class='rk-label'>6-12 meses</div><div class='rk-track'><div class='rk-fill' style='width:36.6%;background:#465768'></div></div><div class='rk-val'>295.181 UF</div></div></div>
+    </div>
+
+    <h3>Ventas y Comercialización <span class="src">B09</span></h3>
+    <div class="kpi-row kpi-row-4">
+      <div class="kpi-card kpi-mini kpi-2"><div class="kpi-label">Unidades Totales del Portafolio</div><div class="kpi-value">1.400</div><div class="kpi-sub">1.381 unidades a la venta (B09)</div></div>
+      <div class="kpi-card kpi-mini kpi-3"><div class="kpi-label">Unidades Vendidas</div><div class="kpi-value">1.330</div><div class="kpi-sub">96,3% de las unidades a la venta</div></div>
+      <div class="kpi-card kpi-mini kpi-4"><div class="kpi-label">Ingresos Totales Potenciales</div><div class="kpi-value">4.702.790 UF</div><div class="kpi-sub">Inventario a precio final o de lista</div></div>
+      <div class="kpi-card kpi-mini kpi-0"><div class="kpi-label">UF Efectivamente Vendida</div><div class="kpi-value">4.337.255 UF</div><div class="kpi-sub">92,2% de los ingresos totales potenciales</div></div>
+    </div>
+    <div class="grid-2">
+      <div><h3>Ranking: % Vendido (Comercial) por Proyecto</h3><div class='rk-row'><div class='rk-label'>La Dehesa</div><div class='rk-track'><div class='rk-fill' style='width:100.0%;background:var(--teal)'></div></div><div class='rk-val'>100,0%</div></div><div class='rk-row'><div class='rk-label'>La Capellania DS19</div><div class='rk-track'><div class='rk-fill' style='width:100.0%;background:var(--teal)'></div></div><div class='rk-val'>100,0%</div></div><div class='rk-row'><div class='rk-label'>Costa del Mar DS19</div><div class='rk-track'><div class='rk-fill' style='width:100.0%;background:var(--teal)'></div></div><div class='rk-val'>100,0%</div></div><div class='rk-row'><div class='rk-label'>San Juan Machali DS19</div><div class='rk-track'><div class='rk-fill' style='width:100.0%;background:var(--teal)'></div></div><div class='rk-val'>100,0%</div></div><div class='rk-row'><div class='rk-label'>Alcala las Torres</div><div class='rk-track'><div class='rk-fill' style='width:99.3%;background:var(--teal)'></div></div><div class='rk-val'>99,3%</div></div><div class='rk-row'><div class='rk-label'>Parque Estébanez (consol. E1+E2)</div><div class='rk-track'><div class='rk-fill' style='width:95.5%;background:var(--teal)'></div></div><div class='rk-val'>95,5%</div></div><div class='rk-row'><div class='rk-label'>Mirador del Aguila</div><div class='rk-track'><div class='rk-fill' style='width:92.3%;background:var(--teal)'></div></div><div class='rk-val'>92,3%</div></div><div class='rk-row'><div class='rk-label'>Mirador Limache DS19</div><div class='rk-track'><div class='rk-fill' style='width:90.7%;background:var(--teal)'></div></div><div class='rk-val'>90,7%</div></div><div class='rk-row'><div class='rk-label'>Holandesa departamentos</div><div class='rk-track'><div class='rk-fill' style='width:82.0%;background:var(--teal)'></div></div><div class='rk-val'>82,0%</div></div><div class='rk-row'><div class='rk-label'>Rocas del Aguila</div><div class='rk-track'><div class='rk-fill' style='width:44.4%;background:var(--teal)'></div></div><div class='rk-val'>44,4%</div></div></div>
+      <div><h3>Ranking: % Conciliado por Proyecto</h3><div class='rk-row'><div class='rk-label'>Rocas del Aguila</div><div class='rk-track'><div class='rk-fill' style='width:6.2%;background:#c99a3d'></div></div><div class='rk-val'>6,2%</div></div><div class='rk-row'><div class='rk-label'>Mirador Limache DS19</div><div class='rk-track'><div class='rk-fill' style='width:6.7%;background:#ad4736'></div></div><div class='rk-val'>6,7%</div></div><div class='rk-row'><div class='rk-label'>Alcala las Torres</div><div class='rk-track'><div class='rk-fill' style='width:8.2%;background:#ad4736'></div></div><div class='rk-val'>8,2%</div></div><div class='rk-row'><div class='rk-label'>La Dehesa</div><div class='rk-track'><div class='rk-fill' style='width:34.2%;background:#ad4736'></div></div><div class='rk-val'>34,2%</div></div><div class='rk-row'><div class='rk-label'>Holandesa departamentos</div><div class='rk-track'><div class='rk-fill' style='width:68.6%;background:#c99a3d'></div></div><div class='rk-val'>68,6%</div></div><div class='rk-row'><div class='rk-label'>Mirador del Aguila</div><div class='rk-track'><div class='rk-fill' style='width:78.1%;background:#1c6e42'></div></div><div class='rk-val'>78,1%</div></div><div class='rk-row'><div class='rk-label'>Parque Estébanez (consol. E1+E2)</div><div class='rk-track'><div class='rk-fill' style='width:97.1%;background:#1c6e42'></div></div><div class='rk-val'>97,1%</div></div><div class='rk-row'><div class='rk-label'>La Capellania DS19</div><div class='rk-track'><div class='rk-fill' style='width:99.7%;background:#1c6e42'></div></div><div class='rk-val'>99,7%</div></div><div class='rk-row'><div class='rk-label'>Costa del Mar DS19</div><div class='rk-track'><div class='rk-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='rk-val'>100,5%</div></div><div class='rk-row'><div class='rk-label'>San Juan Machali DS19</div><div class='rk-track'><div class='rk-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='rk-val'>105,5%</div></div></div>
+    </div>
+
+    <h3>Cobranza <span class="src">AO</span></h3>
+    <div class="kpi-row kpi-row-4">
+      <div class="kpi-card kpi-mini kpi-1"><div class="kpi-label">UF Conciliada (Cobrada)</div><div class="kpi-value">2.668.737 UF</div><div class="kpi-sub">61,5% de lo vendido</div></div>
+      <div class="kpi-card kpi-mini kpi-2"><div class="kpi-label">UF por Recuperar</div><div class="kpi-value">1.619.111 UF</div><div class="kpi-sub">Vendido no conciliado, portafolio completo</div></div>
+      <div class="kpi-card kpi-mini kpi-3"><div class="kpi-label">Peor % Conciliado</div><div class="kpi-value">Rocas del Aguila</div><div class="kpi-sub">6,2% conciliado</div></div>
+      <div class="kpi-card kpi-mini kpi-4"><div class="kpi-label">Mejor % Conciliado</div><div class="kpi-value">San Juan Machali DS19</div><div class="kpi-sub">105,5% conciliado</div></div>
+    </div>
+    <h3>Ranking: UF por Recuperar por Proyecto</h3>
+    <div class='rk-row'><div class='rk-label'>Alcala las Torres</div><div class='rk-track'><div class='rk-fill' style='width:100.0%;background:#ad4736'></div></div><div class='rk-val'>595.969 UF</div></div><div class='rk-row'><div class='rk-label'>La Dehesa</div><div class='rk-track'><div class='rk-fill' style='width:67.1%;background:#ad4736'></div></div><div class='rk-val'>399.990 UF</div></div><div class='rk-row'><div class='rk-label'>Mirador Limache DS19</div><div class='rk-track'><div class='rk-fill' style='width:56.9%;background:#ad4736'></div></div><div class='rk-val'>338.864 UF</div></div><div class='rk-row'><div class='rk-label'>Rocas del Aguila</div><div class='rk-track'><div class='rk-fill' style='width:23.2%;background:#c99a3d'></div></div><div class='rk-val'>138.307 UF</div></div><div class='rk-row'><div class='rk-label'>Mirador del Aguila</div><div class='rk-track'><div class='rk-fill' style='width:15.1%;background:#1c6e42'></div></div><div class='rk-val'>89.946 UF</div></div><div class='rk-row'><div class='rk-label'>Holandesa departamentos</div><div class='rk-track'><div class='rk-fill' style='width:8.6%;background:#c99a3d'></div></div><div class='rk-val'>51.520 UF</div></div><div class='rk-row'><div class='rk-label'>Parque Estébanez (consol. E1+E2)</div><div class='rk-track'><div class='rk-fill' style='width:3.8%;background:#1c6e42'></div></div><div class='rk-val'>22.555 UF</div></div><div class='rk-row'><div class='rk-label'>La Capellania DS19</div><div class='rk-track'><div class='rk-fill' style='width:0.1%;background:#1c6e42'></div></div><div class='rk-val'>883 UF</div></div>
+    <div class="note">"UF por Recuperar" = Vendido (B09) − Conciliado (AO), salvo donde el Directorio entregó una cifra manual de nuevo ingreso esperado que reemplaza ese cálculo. La Dehesa: 449.396 UF (cálculo B09−AO) reemplazado por 399.990 UF de nuevo ingreso esperado (dato manual del Directorio).</div>
+
+    <h3>Obra y Generalidades <span class="src">MAESTRO</span></h3>
+    <div class="kpi-row kpi-row-4">
+      <div class="kpi-card kpi-mini kpi-0"><div class="kpi-label">Avance de Obra Ponderado</div><div class="kpi-value">99,1%</div><div class="kpi-sub">Ponderado por unidades totales</div></div>
+      <div class="kpi-card kpi-mini kpi-1"><div class="kpi-label">Proyectos con Obra 100%</div><div class="kpi-value">9 / 10</div><div class="kpi-sub">1 proyecto(s) en construcción activa</div></div>
+      <div class="kpi-card kpi-mini kpi-2"><div class="kpi-label">Superficie Construida Total</div><div class="kpi-value">77.849 m²</div><div class="kpi-sub">Proyectos con dato disponible en Maestro</div></div>
+      <div class="kpi-card kpi-mini kpi-3"><div class="kpi-label">Margen Neto Presupuestado Total</div><div class="kpi-value">350.497 UF</div><div class="kpi-sub">Proyectos con presupuesto cargado en Maestro</div></div>
+    </div>
+
+    <h3>Cruce Obra / Comercial / Conciliado por Proyecto</h3>
+    <div class="triple-grid"><div class='triple-block'><div class='triple-title'>Alcala las Torres</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:99.3%;background:#465768'></div></div><div class='triple-val'>99,3%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:8.2%;background:#ad4736'></div></div><div class='triple-val'>8,2%</div></div></div><div class='triple-block'><div class='triple-title'>Costa del Mar DS19</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#465768'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,5%</div></div></div><div class='triple-block'><div class='triple-title'>Holandesa departamentos</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:82.0%;background:#465768'></div></div><div class='triple-val'>82,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:68.6%;background:#c99a3d'></div></div><div class='triple-val'>68,6%</div></div></div><div class='triple-block'><div class='triple-title'>La Capellania DS19</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#465768'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:99.7%;background:#1c6e42'></div></div><div class='triple-val'>99,7%</div></div></div><div class='triple-block'><div class='triple-title'>La Dehesa</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#465768'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:34.2%;background:#ad4736'></div></div><div class='triple-val'>34,2%</div></div></div><div class='triple-block'><div class='triple-title'>Mirador Limache DS19</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:90.7%;background:#465768'></div></div><div class='triple-val'>90,7%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:6.7%;background:#ad4736'></div></div><div class='triple-val'>6,7%</div></div></div><div class='triple-block'><div class='triple-title'>Mirador del Aguila</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:92.3%;background:#465768'></div></div><div class='triple-val'>92,3%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:78.1%;background:#1c6e42'></div></div><div class='triple-val'>78,1%</div></div></div><div class='triple-block'><div class='triple-title'>Parque Estébanez (consol. E1+E2)</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:95.5%;background:#465768'></div></div><div class='triple-val'>95,5%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:97.1%;background:#1c6e42'></div></div><div class='triple-val'>97,1%</div></div></div><div class='triple-block'><div class='triple-title'>Rocas del Aguila</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:28.3%;background:#1c6e42'></div></div><div class='triple-val'>28,3%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:44.4%;background:#465768'></div></div><div class='triple-val'>44,4%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:6.2%;background:#c99a3d'></div></div><div class='triple-val'>6,2%</div></div></div><div class='triple-block'><div class='triple-title'>San Juan Machali DS19</div><div class='triple-line'><span class='triple-tag'>Obra</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Comercial</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#465768'></div></div><div class='triple-val'>100,0%</div></div><div class='triple-line'><span class='triple-tag'>Conciliado</span><div class='triple-track'><div class='triple-fill' style='width:100.0%;background:#1c6e42'></div></div><div class='triple-val'>105,5%</div></div></div></div>
+
+    <div class="note">Fuentes de esta pestaña: Calendario vctos creditos y bol.xlsx (deuda, intereses, vencimientos), B09 Resumen por proyecto y producto.csv (ventas), AO.xlsx (conciliación), Maestro Proyectos.xlsx (generalidades y presupuestos). Todas las cifras son consistentes con las secciones 1 a 9 de este mismo informe.</div>
+  </section>
+
+
+  <footer>Fuentes: Calendario vctos creditos y bol.xlsx · B09 Resumen por proyecto y producto · AO (CRM comercial) · Maestro Proyectos · Tasco Inmobiliaria · Confidencial, uso interno del Directorio</footer>
+</div>
+</body>
+</html>
