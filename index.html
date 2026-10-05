@@ -698,8 +698,8 @@
     <div class="pj-bar" id="pj-bar"><span class="pj-lbl">Meses:</span></div>
     <div class="pj-bar" id="pj-bar-y" style="position:static;border:none;padding:0 0 6px;"><span class="pj-lbl">Hasta fin de año:</span></div>
     <div class="pj-per" id="pj-per"></div>
-    <h3>Escenario E2 <span class="src">FLUJO FC_E2</span></h3><div style="overflow-x:auto;"><table id="pj-tbl-E2"><thead><tr><th>Proyecto</th><th class="num">Deuda inicial<br>(sep-26)</th><th class="num">Giros<br>acum.</th><th class="num">Amortización<br>acum.</th><th class="num">Deuda a fin<br>de período</th><th class="num">Interés pagado<br>a la fecha (real)<span class="src">CALEND. Q</span></th><th class="num">Gasto financiero<br>devengado (proy.)</th><th class="num">Interés pagado<br>proyectado (caja)</th><th class="num">Interés pagado<br>total (real + proy.)</th><th class="num">Aportes de<br>capital</th><th class="num">Amort. no<br>cubierta</th></tr></thead><tbody></tbody></table></div>
-    <div class="note"><b>Metodología:</b> gasto financiero devengado = saldo × tasa / 12 cada mes. Interés pagado a la fecha (real) = columna Q "Pagados UF" del Calendario (caja ya pagada hasta sep-2026, incluida siempre). Interés pagado proyectado (caja) = intereses del pagaré al renovarse (aniversario) y la parte proporcional devengada cuando se amortiza (la amortización se aplica a los pagarés más antiguos primero, FIFO). Giro del mes se considera desde el inicio del mes; amortización al cierre. Aportes de capital = fila "Aportes" del flujo (neto; valores negativos son retiros/devoluciones). Deuda inicial = deuda vigente real del Calendario (sep-2026); proyectos sin deuda real parten en 0. Si la amortización del flujo supera la deuda modelada, se limita al saldo y la diferencia se informa como "Amort. no cubierta".</div>
+    <h3>Escenario E2 <span class="src">FLUJO FC_E2</span></h3><div style="overflow-x:auto;"><table id="pj-tbl-E2"><thead><tr><th>Proyecto</th><th class="num">Deuda inicial<br>(sep-26)</th><th class="num">Giros<br>acum.</th><th class="num">Amortización<br>acum.</th><th class="num">Deuda a fin<br>de período</th><th class="num">Interés pagado<br>a la fecha (real)<span class="src">CALEND. Q</span></th><th class="num">Gasto financiero<br>devengado (proy.)</th><th class="num">Interés pagado<br>total (real)</th><th class="num">Aportes de<br>capital</th><th class="num">Amort. no<br>cubierta</th></tr></thead><tbody></tbody></table></div>
+    <div class="note"><b>Metodología:</b> gasto financiero devengado = saldo × tasa / 12 cada mes. Interés pagado a la fecha (real) = columna Q "Pagados UF" del Calendario (caja ya pagada hasta sep-2026, incluida siempre). Interés pagado total (real) = interés ya pagado a la fecha + interés pagado proyectado (caja), este último = intereses del pagaré al renovarse (aniversario) y la parte proporcional devengada cuando se amortiza (la amortización se aplica a los pagarés más antiguos primero, FIFO). Giro del mes se considera desde el inicio del mes; amortización al cierre. Aportes de capital = fila "Aportes" del flujo (neto; valores negativos son retiros/devoluciones). Deuda inicial = deuda vigente real del Calendario (sep-2026); proyectos sin deuda real parten en 0. Si la amortización del flujo supera la deuda modelada, se limita al saldo y la diferencia se informa como "Amort. no cubierta".</div>
   </section>
 
 <script>
@@ -715,11 +715,11 @@
     document.getElementById('pj-per').textContent='Período: '+lbl(PJ.meses[0])+' a '+lbl(PJ.meses[n-1])+' ('+n+' mes'+(n>1?'es':'')+')';
     document.getElementById('pj-n').value=n;
     Object.keys(PJ.escenarios).forEach(function(e){
-      var tb=document.querySelector('#pj-tbl-'+e+' tbody'), html='', T=[0,0,0,0,0,0,0,0,0,0];
+      var tb=document.querySelector('#pj-tbl-'+e+' tbody'), html='', T=[0,0,0,0,0,0,0,0,0];
       PJ.escenarios[e].forEach(function(p){
         function sm(a){var s=0;for(var i=0;i<n;i++)s+=a[i];return s;}
-        var pp=sm(p.int_pag), v=[p.saldo_inicial,sm(p.giros),sm(p.amort),p.saldo[n-1],p.int_pag_real||0,sm(p.int_dev),pp,(p.int_pag_real||0)+pp,sm(p.aportes),sm(p.amort_sin_cubrir)];
-        for(var k=0;k<10;k++)T[k]+=v[k];
+        var pp=sm(p.int_pag), v=[p.saldo_inicial,sm(p.giros),sm(p.amort),p.saldo[n-1],p.int_pag_real||0,sm(p.int_dev),(p.int_pag_real||0)+pp,sm(p.aportes),sm(p.amort_sin_cubrir)];
+        for(var k=0;k<9;k++)T[k]+=v[k];
         html+='<tr><td>'+p.nombre+(p.real&&p.banco?'<div class="muted">'+p.banco+'</div>':(!p.real?'<div class="muted">Proyecto en cartera</div>':''))+'</td>'+v.map(function(x){return '<td class="num">'+f(x)+'</td>';}).join('')+'</tr>';
       });
       html+='<tr class="total-row"><td><b>TOTAL</b></td>'+T.map(function(x){return '<td class="num"><b>'+f(x)+'</b></td>';}).join('')+'</tr>';
